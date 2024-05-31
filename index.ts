@@ -3,6 +3,7 @@ import knex from "knex";
 import dotenv from "dotenv";
 import { Model } from "objection";
 import router from "./src/routes";
+import swaggerUi from "swagger-ui-express";
 
 dotenv.config();
 
@@ -23,7 +24,7 @@ const port = 8000;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use(router);
+app.use("/api", router);
 
 app.listen(port, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${port}`);

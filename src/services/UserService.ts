@@ -9,6 +9,10 @@ class UserService {
   async getAdminUsers(): Promise<UsersModel[]> {
     return await userRepository.getAdminUsers();
   }
+
+  async getMemberUsers(): Promise<UsersModel[]> {
+    return await userRepository.getMemberUsers();
+  }
   async register(
     id: string,
     username: string,

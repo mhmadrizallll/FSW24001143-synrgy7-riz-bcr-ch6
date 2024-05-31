@@ -4,19 +4,13 @@ import authMiddleware from "../middleware/authMiddleware";
 const router = express.Router();
 
 // access member without token
-router.post("/users/register", userControllers.register);
-router.post("/users/login", userControllers.login);
-router.put("/users/:id", userControllers.updateUser);
+router.post("/login", userControllers.login);
 
 // access superadmin and admin with token
-router.get("/users", authMiddleware, userControllers.getUsers);
-router.post(
-  "/users/superadmin/register",
-  authMiddleware,
-  userControllers.register
-);
-router.put("/users/superadmin/:id", authMiddleware, userControllers.updateUser);
-router.delete("/users/:id", authMiddleware, userControllers.deleteUser);
-router.get("/users/me", authMiddleware, userControllers.getCurrentUser);
+router.get("/", authMiddleware, userControllers.getUsers);
+router.post("/register", authMiddleware, userControllers.register);
+router.put("/:id", authMiddleware, userControllers.updateUser);
+router.delete("/:id", authMiddleware, userControllers.deleteUser);
+router.get("/me", authMiddleware, userControllers.getCurrentUser);
 
 export default router;

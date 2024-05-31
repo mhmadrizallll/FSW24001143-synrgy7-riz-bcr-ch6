@@ -22,6 +22,11 @@ class UserService {
             return yield UserRepository_1.userRepository.getAdminUsers();
         });
     }
+    getMemberUsers() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield UserRepository_1.userRepository.getMemberUsers();
+        });
+    }
     register(id, username, email, password, role) {
         return __awaiter(this, void 0, void 0, function* () {
             yield UserRepository_1.userRepository.createUser({ id, username, email, password, role });

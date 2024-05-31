@@ -12,6 +12,7 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const token = authorization.split(" ")[1];
     const superadminSecret = process.env.SUPERADMIN_SECRET;
     const adminSecret = process.env.ADMIN_SECRET;
+    const memberSecret = process.env.MEMBER_SECRET;
 
     let user;
     try {
@@ -26,8 +27,15 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
           role: string;
         };
       } catch (err) {
-        res.status(401).json({ status: false, message: "Access denied" });
-        return;
+        try {
+          user = jwt.verify(token, memberSecret) as jwt.JwtPayload & {
+            id: string;
+            role: string;
+          };
+        } catch (err) {
+          res.status(401).json({ status: false, message: "Access denied" });
+          return;
+        }
       }
     }
 

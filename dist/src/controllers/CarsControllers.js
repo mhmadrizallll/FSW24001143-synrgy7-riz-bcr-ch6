@@ -43,15 +43,23 @@ class CarsControllers {
         });
     }
     create(req, res) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const { merk, type, year, status } = req.body;
             const user = req.user;
+            const role = (_a = req.user) === null || _a === void 0 ? void 0 : _a.role;
             console.log("ini adalah user", user);
             try {
                 if (!merk || !type || !year) {
                     return res.status(400).json({
                         status: false,
                         message: "All fields are required",
+                    });
+                }
+                if (role !== "superadmin" && role !== "admin") {
+                    return res.status(401).json({
+                        status: false,
+                        message: "Access forbidden",
                     });
                 }
                 const payload = {
@@ -75,15 +83,23 @@ class CarsControllers {
         });
     }
     update(req, res) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const { merk, type, year, status } = req.body;
             const { id } = req.params;
             const user = req.user;
+            const role = (_a = req.user) === null || _a === void 0 ? void 0 : _a.role;
             try {
                 if (!merk || !type || !year) {
                     return res.status(400).json({
                         status: false,
                         message: "All fields are required",
+                    });
+                }
+                if (role !== "superadmin" && role !== "admin") {
+                    return res.status(401).json({
+                        status: false,
+                        message: "Access forbidden",
                     });
                 }
                 const payload = {
@@ -114,11 +130,19 @@ class CarsControllers {
         });
     }
     softDelete(req, res) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
             const user = req.user;
+            const role = (_a = req.user) === null || _a === void 0 ? void 0 : _a.role;
             try {
                 const car = yield CarService_1.carService.softDeleteCar(id, user.username);
+                if (role !== "superadmin" && role !== "admin") {
+                    return res.status(401).json({
+                        status: false,
+                        message: "Access forbidden",
+                    });
+                }
                 if (car) {
                     res.status(200).json({
                         status: true,
@@ -146,11 +170,19 @@ class CarsControllers {
         });
     }
     restore(req, res) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
             const user = req.user;
+            const role = (_a = req.user) === null || _a === void 0 ? void 0 : _a.role;
             try {
                 const car = yield CarService_1.carService.restoreCar(id, user.username);
+                if (role !== "superadmin" && role !== "admin") {
+                    return res.status(401).json({
+                        status: false,
+                        message: "Access forbidden",
+                    });
+                }
                 if (car) {
                     res.status(200).json({
                         status: true,

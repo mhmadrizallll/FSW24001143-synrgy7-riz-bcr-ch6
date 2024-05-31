@@ -7,6 +7,9 @@ class UserRepository {
   async getAdminUsers(): Promise<UsersModel[]> {
     return await UsersModel.query().where("role", "admin");
   }
+  async getMemberUsers(): Promise<UsersModel[]> {
+    return await UsersModel.query().where("role", "member");
+  }
   async createUser(user: Partial<UsersModel>): Promise<UsersModel> {
     return await UsersModel.query().insert(user);
   }

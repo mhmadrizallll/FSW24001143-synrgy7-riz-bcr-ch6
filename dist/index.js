@@ -24,7 +24,7 @@ const app = (0, express_1.default)();
 const port = 8000;
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use(express_1.default.json());
-app.use(routes_1.default);
+app.use("/api", routes_1.default);
 app.listen(port, () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
 });

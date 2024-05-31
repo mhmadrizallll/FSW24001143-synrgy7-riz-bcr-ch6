@@ -4,7 +4,7 @@ import carsRouter from "./carsRouter";
 import { carsControllers } from "../controllers/CarsControllers";
 const router = express.Router();
 
-router.use("/api", usersRouter);
-router.use("/api", carsRouter);
+router.use("/users", usersRouter);
+router.use("/cars", carsRouter);
 
 export default router;

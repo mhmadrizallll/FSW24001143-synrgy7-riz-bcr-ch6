@@ -22,6 +22,11 @@ class UserRepository {
             return yield users_model_1.UsersModel.query().where("role", "admin");
         });
     }
+    getMemberUsers() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield users_model_1.UsersModel.query().where("role", "member");
+        });
+    }
     createUser(user) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield users_model_1.UsersModel.query().insert(user);

@@ -14,6 +14,7 @@ const authMiddleware = (req, res, next) => {
         const token = authorization.split(" ")[1];
         const superadminSecret = process.env.SUPERADMIN_SECRET;
         const adminSecret = process.env.ADMIN_SECRET;
+        const memberSecret = process.env.MEMBER_SECRET;
         let user;
         try {
             user = jsonwebtoken_1.default.verify(token, superadminSecret);
@@ -23,8 +24,13 @@ const authMiddleware = (req, res, next) => {
                 user = jsonwebtoken_1.default.verify(token, adminSecret);
             }
             catch (err) {
-                res.status(401).json({ status: false, message: "Access denied" });
-                return;
+                try {
+                    user = jsonwebtoken_1.default.verify(token, memberSecret);
+                }
+                catch (err) {
+                    res.status(401).json({ status: false, message: "Access denied" });
+                    return;
+                }
             }
         }
         if (!user || typeof user !== "object" || !user.id || !user.role) {

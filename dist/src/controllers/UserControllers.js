@@ -8,6 +8,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -31,14 +42,21 @@ class UserControllers {
                 else if (role === "admin") {
                     users = yield UserService_1.userService.getAdminUsers();
                 }
+                else if (role === "member") {
+                    users = yield UserService_1.userService.getMemberUsers();
+                }
                 else {
                     res.status(401).json({ status: false, message: "Access forbidden" });
                     return;
                 }
+                const withoutPassword = users.map((user) => {
+                    const { password } = user, rest = __rest(user, ["password"]);
+                    return rest;
+                });
                 res.status(200).json({
                     status: true,
                     message: "Users Available",
-                    data: users,
+                    data: withoutPassword,
                 });
             }
             catch (err) {
@@ -168,6 +186,11 @@ class UserControllers {
                 }
                 else if (user.role === "admin") {
                     token = jsonwebtoken_1.default.sign(payload, process.env.ADMIN_SECRET, {
+                        expiresIn: "30d",
+                    });
+                }
+                else if (user.role === "member") {
+                    token = jsonwebtoken_1.default.sign(payload, process.env.MEMBER_SECRET, {
                         expiresIn: "30d",
                     });
                 }
@@ -321,8 +344,9 @@ class UserControllers {
                 const user = yield UserService_1.userService.getCurrentUser(id);
                 if (!user) {
                     res.status(404).json({ status: false, message: "User not found" });
+                    return;
                 }
-                res.status(200).json({ status: true, message: "User found", user });
+                res.status(200).json({ status: true, message: "User Available", user });
             }
             catch (err) {
                 console.log(err);

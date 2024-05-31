@@ -14,15 +14,20 @@ class UserControllers {
         users = await userService.getAllUsers();
       } else if (role === "admin") {
         users = await userService.getAdminUsers();
+      } else if (role === "member") {
+        users = await userService.getMemberUsers();
       } else {
         res.status(401).json({ status: false, message: "Access forbidden" });
         return;
       }
-
+      const withoutPassword = users.map((user) => {
+        const { password, ...rest } = user;
+        return rest;
+      });
       res.status(200).json({
         status: true,
         message: "Users Available",
-        data: users,
+        data: withoutPassword,
       });
     } catch (err) {
       res.status(500).json({ status: false, message: err });
@@ -171,6 +176,10 @@ class UserControllers {
         });
       } else if (user.role === "admin") {
         token = jwt.sign(payload, process.env.ADMIN_SECRET, {
+          expiresIn: "30d",
+        });
+      } else if (user.role === "member") {
+        token = jwt.sign(payload, process.env.MEMBER_SECRET, {
           expiresIn: "30d",
         });
       }
@@ -327,8 +336,9 @@ class UserControllers {
       const user = await userService.getCurrentUser(id);
       if (!user) {
         res.status(404).json({ status: false, message: "User not found" });
+        return;
       }
-      res.status(200).json({ status: true, message: "User found", user });
+      res.status(200).json({ status: true, message: "User Available", user });
     } catch (err) {
       console.log(err);
       res.status(500).json({ status: false, message: err });

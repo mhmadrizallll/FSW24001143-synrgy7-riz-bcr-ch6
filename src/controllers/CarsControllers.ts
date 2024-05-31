@@ -31,12 +31,20 @@ class CarsControllers {
   async create(req: Request, res: Response) {
     const { merk, type, year, status } = req.body;
     const user: any = req.user;
+    const role = req.user?.role;
     console.log("ini adalah user", user);
     try {
       if (!merk || !type || !year) {
         return res.status(400).json({
           status: false,
           message: "All fields are required",
+        });
+      }
+
+      if (role !== "superadmin" && role !== "admin") {
+        return res.status(401).json({
+          status: false,
+          message: "Access forbidden",
         });
       }
 
@@ -63,6 +71,7 @@ class CarsControllers {
     const { merk, type, year, status } = req.body;
     const { id } = req.params;
     const user: any = req.user;
+    const role = req.user?.role;
     try {
       if (!merk || !type || !year) {
         return res.status(400).json({
@@ -70,6 +79,14 @@ class CarsControllers {
           message: "All fields are required",
         });
       }
+
+      if (role !== "superadmin" && role !== "admin") {
+        return res.status(401).json({
+          status: false,
+          message: "Access forbidden",
+        });
+      }
+
       const payload = {
         merk,
         type,
@@ -100,9 +117,16 @@ class CarsControllers {
   async softDelete(req: Request, res: Response) {
     const { id } = req.params;
     const user: any = req.user;
+    const role = req.user?.role;
 
     try {
       const car: any = await carService.softDeleteCar(id, user.username);
+      if (role !== "superadmin" && role !== "admin") {
+        return res.status(401).json({
+          status: false,
+          message: "Access forbidden",
+        });
+      }
       if (car) {
         res.status(200).json({
           status: true,
@@ -130,8 +154,15 @@ class CarsControllers {
   async restore(req: Request, res: Response) {
     const { id } = req.params;
     const user: any = req.user;
+    const role = req.user?.role;
     try {
       const car = await carService.restoreCar(id, user.username);
+      if (role !== "superadmin" && role !== "admin") {
+        return res.status(401).json({
+          status: false,
+          message: "Access forbidden",
+        });
+      }
       if (car) {
         res.status(200).json({
           status: true,
