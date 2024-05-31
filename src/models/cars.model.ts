@@ -9,9 +9,10 @@ export class CarsModel extends Model {
   created_by!: string;
   updated_by!: string;
   deleted_by?: string;
+  restored_by?: string;
   created_at!: Date;
   updated_at!: Date;
-  deleted_at?: Date;
+  is_deleted!: boolean;
   static get tableName() {
     return "cars";
   }

@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.seed = void 0;
 const uuid_1 = require("uuid");
+const bcrypt_1 = require("../src/utils/bcrypt");
 function seed(knex) {
     return __awaiter(this, void 0, void 0, function* () {
         // Deletes ALL existing entries
@@ -21,21 +22,21 @@ function seed(knex) {
                 id: (0, uuid_1.v4)(),
                 username: "superadmin",
                 email: "superadmin@admin.com",
-                password: "Superadmin1*",
+                password: yield (0, bcrypt_1.encryptPassword)("Superadmin1*"),
                 role: "superadmin",
             },
             {
                 id: (0, uuid_1.v4)(),
                 username: "admin",
                 email: "admin@admin.com",
-                password: "Admin1*",
+                password: yield (0, bcrypt_1.encryptPassword)("Admin1*"),
                 role: "admin",
             },
             {
                 id: (0, uuid_1.v4)(),
                 username: "member",
                 email: "member@admin.com",
-                password: "Member1*",
+                password: yield (0, bcrypt_1.encryptPassword)("Member1*"),
                 role: "member",
             },
         ]);

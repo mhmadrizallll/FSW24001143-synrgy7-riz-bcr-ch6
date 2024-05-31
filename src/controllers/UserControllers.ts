@@ -161,6 +161,7 @@ class UserControllers {
 
       const payload = {
         id: user.id,
+        username: user.username,
         role: user.role,
       };
       let token;
@@ -237,6 +238,7 @@ class UserControllers {
         email: data.email.toLowerCase(),
         password: await encryptPassword(data.password),
         role: data.role,
+        updated_at: new Date(),
       };
       //
       if (data.role === "member") {
@@ -245,6 +247,7 @@ class UserControllers {
           email: payload.email,
           password: payload.password,
           role: payload.role,
+          updated_at: payload.updated_at,
         });
         res.status(200).json({
           status: true,
@@ -270,6 +273,8 @@ class UserControllers {
         email: payload.email,
         password: payload.password,
         role: payload.role,
+        created_at: payload.created_at,
+        updated_at: payload.updated_at,
       });
       if (!user) {
         res.status(404).json({ status: false, message: "User not found" });
@@ -282,6 +287,8 @@ class UserControllers {
           username: user.username,
           email: user.email,
           role: user.role,
+          created_at: payload.created_at,
+          updated_at: payload.updated_at,
         },
       });
     } catch (err) {
@@ -300,7 +307,13 @@ class UserControllers {
         res.status(401).json({ status: false, message: "Access forbidden" });
         return;
       }
-      await userService.deleteUser(id);
+
+      const user: any = await userService.deleteUser(id);
+      if (!user) {
+        res.status(404).json({ status: false, message: "User not found" });
+        return;
+      }
+
       res.status(200).json({ status: true, message: "User deleted" });
     } catch (err) {
       console.log(err);

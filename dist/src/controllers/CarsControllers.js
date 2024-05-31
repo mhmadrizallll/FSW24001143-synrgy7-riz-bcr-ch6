@@ -10,10 +10,172 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.carsControllers = void 0;
+const CarService_1 = require("../services/CarService");
+const uuid_1 = require("uuid");
 class CarsControllers {
     getCars(req, res) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            res.status(200).json({ status: true, message: "Cars found" });
+            const role = (_a = req.user) === null || _a === void 0 ? void 0 : _a.role;
+            console.log("ini adalah user", role);
+            try {
+                let cars;
+                if (role === "superadmin" || role === "admin") {
+                    cars = yield CarService_1.carService.getAllCars();
+                    res.status(200).json({
+                        status: true,
+                        message: "Cars Available",
+                        data: cars,
+                    });
+                }
+                else {
+                    cars = yield CarService_1.carService.getCarIsDeletedFalse();
+                    res.status(200).json({
+                        status: true,
+                        message: "Cars Available",
+                        data: cars,
+                    });
+                }
+            }
+            catch (err) {
+                res.status(500).json({ status: false, message: err });
+            }
+        });
+    }
+    create(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { merk, type, year, status } = req.body;
+            const user = req.user;
+            console.log("ini adalah user", user);
+            try {
+                if (!merk || !type || !year) {
+                    return res.status(400).json({
+                        status: false,
+                        message: "All fields are required",
+                    });
+                }
+                const payload = {
+                    id: (0, uuid_1.v4)(),
+                    merk,
+                    type,
+                    year,
+                    status,
+                    created_by: user.username,
+                };
+                const car = yield CarService_1.carService.createCar(payload);
+                res.status(200).json({
+                    status: true,
+                    message: "Car created",
+                    data: payload,
+                });
+            }
+            catch (err) {
+                res.status(500).json({ status: false, message: err });
+            }
+        });
+    }
+    update(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { merk, type, year, status } = req.body;
+            const { id } = req.params;
+            const user = req.user;
+            try {
+                if (!merk || !type || !year) {
+                    return res.status(400).json({
+                        status: false,
+                        message: "All fields are required",
+                    });
+                }
+                const payload = {
+                    merk,
+                    type,
+                    year,
+                    status,
+                    updated_by: user.username,
+                    updated_at: new Date(),
+                };
+                const car = yield CarService_1.carService.updateCar(id, payload);
+                res.status(200).json({
+                    status: true,
+                    message: "Car updated",
+                    data: {
+                        id: car.id,
+                        merk: car.merk,
+                        type: car.type,
+                        year: car.year,
+                        status: car.status,
+                        updated_by: car.updated_by,
+                    },
+                });
+            }
+            catch (err) {
+                res.status(500).json({ status: false, message: err });
+            }
+        });
+    }
+    softDelete(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const user = req.user;
+            try {
+                const car = yield CarService_1.carService.softDeleteCar(id, user.username);
+                if (car) {
+                    res.status(200).json({
+                        status: true,
+                        message: "Car deleted",
+                        data: {
+                            id: car.id,
+                            merk: car.merk,
+                            type: car.type,
+                            year: car.year,
+                            status: car.status,
+                            is_deleted: car.is_deleted,
+                        },
+                    });
+                }
+                else {
+                    res.status(404).json({
+                        status: false,
+                        message: "Car not found or already deleted",
+                    });
+                }
+            }
+            catch (err) {
+                res.status(500).json({ status: false, message: err });
+            }
+        });
+    }
+    restore(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const user = req.user;
+            try {
+                const car = yield CarService_1.carService.restoreCar(id, user.username);
+                if (car) {
+                    res.status(200).json({
+                        status: true,
+                        message: "Car restored",
+                        data: {
+                            id: car.id,
+                            merk: car.merk,
+                            type: car.type,
+                            year: car.year,
+                            status: car.status,
+                            restored_by: car.restored_by,
+                        },
+                    });
+                }
+                else {
+                    res.status(404).json({
+                        status: false,
+                        message: "Car not found or already restored",
+                    });
+                }
+            }
+            catch (err) {
+                console.log(err);
+                res.status(500).json({ status: false, message: err });
+            }
         });
     }
 }
