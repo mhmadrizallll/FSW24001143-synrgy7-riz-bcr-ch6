@@ -1,0 +1,349 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Users and Cars API",
+        "version": "1.0.0",
+        "description": "API for managing users and cars"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000",
+            "basePath": "Endpoint User"
+        }
+    ],
+    "paths": {
+        "/users/register": {
+            "post": {
+                "summary": "Register User",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "types": "object",
+                                "properties": {
+                                    "username": {
+                                        "type": "string",
+                                        "example": "superadmin"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "superadmin@superadmin.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "superadmin"
+                                    },
+                                    "role": {
+                                        "type": "string",
+                                        "example": "superadmin"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Register User",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "types": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Register User Successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "example": "ed52f847-0c53-428c-8f34-b01cfd4d2635"
+                                                    },
+                                                    "username": {
+                                                        "type": "string",
+                                                        "example": "superadmin"
+                                                    },
+                                                    "email": {
+                                                        "type": "string",
+                                                        "example": "superadmin@superadmin.com"
+                                                    },
+                                                    "password": {
+                                                        "type": "string",
+                                                        "example": "superadmin"
+                                                    },
+                                                    "role": {
+                                                        "type": "string",
+                                                        "example": "admin"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error message",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "types": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Access forbidden"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error message",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "types": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Internal server error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/login": {
+            "post": {
+                "summary": "Login User",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "types": "object",
+                                "properties": {
+                                    "username": {
+                                        "type": "string",
+                                        "example": "superadmin"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "superadmin"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login User",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "types": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Login User Successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "example": "ed52f847-0c53-428c-8f34-b01cfd4d2635"
+                                                    },
+                                                    "username": {
+                                                        "type": "string",
+                                                        "example": "superadmin"
+                                                    },
+                                                    "email": {
+                                                        "type": "string",
+                                                        "example": "superadmin@superadmin.com"
+                                                    },
+                                                    "password": {
+                                                        "type": "string",
+                                                        "example": "superadmin"
+                                                    },
+                                                    "role": {
+                                                        "type": "string",
+                                                        "example": "admin"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Error message",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "types": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error message",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "types": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Wrong Password"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error message",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "types": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Internal server error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users": {
+            "get": {
+                "summary": "Get all users",
+                "responses": {
+                    "200": {
+                        "description": "Get all users",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "types": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User Available"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "example": "ed52f847-0c53-428c-8f34-b01cfd4d2635"
+                                                    },
+                                                    "username": {
+                                                        "type": "string",
+                                                        "example": "superadmin"
+                                                    },
+                                                    "email": {
+                                                        "type": "string",
+                                                        "example": "superadmin@superadmin.com"
+                                                    },
+                                                    "password": {
+                                                        "type": "string",
+                                                        "example": "superadmin"
+                                                    },
+                                                    "role": {
+                                                        "type": "string",
+                                                        "example": "admin"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error message",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "types": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Internal server error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
