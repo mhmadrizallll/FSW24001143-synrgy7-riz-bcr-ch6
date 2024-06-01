@@ -347,7 +347,7 @@
         }
       }
     },
-    "/users/id": {
+    "/users/{id}": {
       "put": {
         "tags": ["Users"],
         "summary": "Update User",
@@ -584,6 +584,523 @@
                           }
                         }
                       }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "types": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/cars": {
+      "get": {
+        "tags": ["Cars"],
+        "summary": "Get cars",
+        "responses": {
+          "200": {
+            "description": "Get all cars",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "types": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Cars Available"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "example": "ed52f847-0c53-428c-8f34-b01cfd4d2635"
+                          },
+                          "merk": {
+                            "type": "string",
+                            "example": "Toyota"
+                          },
+                          "type": {
+                            "type": "string",
+                            "example": "Yaris"
+                          },
+                          "year": {
+                            "type": "integer",
+                            "example": "2020"
+                          },
+                          "status": {
+                            "type": "string",
+                            "example": "available"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "types": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Cars"],
+        "summary": "Create car",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "types": "object",
+                "properties": {
+                  "merk": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "year": {
+                    "type": "integer",
+                    "example": "integer"
+                  },
+                  "status": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Create car successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "types": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Create User Successfully"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "example": "ed52f847-0c53-428c-8f34-b01cfd4d2635"
+                          },
+                          "merk": {
+                            "type": "string",
+                            "example": "Toyota"
+                          },
+                          "type": {
+                            "type": "string",
+                            "example": "Yaris"
+                          },
+                          "year": {
+                            "type": "integer",
+                            "example": "2020"
+                          },
+                          "status": {
+                            "type": "string",
+                            "example": "available"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "types": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Access forbidden"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "types": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cars/{id}": {
+      "put": {
+        "tags": ["Cars"],
+        "summary": "Update car",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "types": "object",
+                "properties": {
+                  "merk": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "year": {
+                    "type": "integer",
+                    "example": "integer"
+                  },
+                  "status": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Update car successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "types": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Update User Successfully"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "example": "ed52f847-0c53-428c-8f34-b01cfd4d2635"
+                          },
+                          "merk": {
+                            "type": "string",
+                            "example": "Toyota"
+                          },
+                          "type": {
+                            "type": "string",
+                            "example": "Yaris"
+                          },
+                          "year": {
+                            "type": "integer",
+                            "example": "2020"
+                          },
+                          "status": {
+                            "type": "string",
+                            "example": "available"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "types": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Access forbidden"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "types": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Car not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "types": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Cars"],
+        "summary": "Delete car",
+        "responses": {
+          "200": {
+            "description": "Delete car",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "types": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Delete car Successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "types": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Access forbidden"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "types": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Car not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "types": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cars/restore/{id}": {
+      "post": {
+        "tags": ["Cars"],
+        "summary": "Restore car",
+        "responses": {
+          "200": {
+            "description": "Restore car",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "types": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Restore car Successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "types": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Access forbidden"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "types": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Car not found"
                     }
                   }
                 }

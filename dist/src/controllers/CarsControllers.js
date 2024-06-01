@@ -71,7 +71,7 @@ class CarsControllers {
                     created_by: user.username,
                 };
                 const car = yield CarService_1.carService.createCar(payload);
-                res.status(200).json({
+                res.status(201).json({
                     status: true,
                     message: "Car created",
                     data: payload,
