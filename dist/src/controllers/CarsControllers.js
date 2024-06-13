@@ -8,11 +8,30 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.carsControllers = void 0;
 const CarService_1 = require("../services/CarService");
 const uuid_1 = require("uuid");
+const cloudinary_1 = __importDefault(require("../middleware/cloudinary"));
 class CarsControllers {
+    getCarsALluser(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const cars = yield CarService_1.carService.getAllCars();
+                res.status(200).json({
+                    status: true,
+                    message: "Cars Available",
+                    data: cars,
+                });
+            }
+            catch (err) {
+                res.status(500).json({ status: false, message: err });
+            }
+        });
+    }
     getCars(req, res) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
@@ -42,6 +61,52 @@ class CarsControllers {
             }
         });
     }
+    getCarById(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            try {
+                const car = yield CarService_1.carService.getCarById(id);
+                if (car) {
+                    res.status(200).json({
+                        status: true,
+                        message: "Car Available",
+                        data: car,
+                    });
+                }
+                else {
+                    res.status(404).json({
+                        status: false,
+                        message: "Car not found",
+                    });
+                }
+            }
+            catch (err) {
+                res.status(500).json({ status: false, message: err });
+            }
+        });
+    }
+    cloudUploadImage(req, res) {
+        var _a, _b;
+        return __awaiter(this, void 0, void 0, function* () {
+            const fileBase64 = (_a = req.file) === null || _a === void 0 ? void 0 : _a.buffer.toString("base64");
+            const file = `data:${(_b = req.file) === null || _b === void 0 ? void 0 : _b.mimetype};base64,${fileBase64}`;
+            cloudinary_1.default.uploader
+                .upload(file)
+                .then((result) => {
+                res.status(200).json({
+                    status: true,
+                    message: "File uploaded",
+                    data: result,
+                });
+            })
+                .catch((err) => {
+                res.status(500).json({
+                    status: false,
+                    message: err,
+                });
+            });
+        });
+    }
     create(req, res) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
@@ -50,6 +115,14 @@ class CarsControllers {
             const role = (_a = req.user) === null || _a === void 0 ? void 0 : _a.role;
             console.log("ini adalah user", user);
             try {
+                if (!req.file) {
+                    return res.status(400).json({
+                        status: false,
+                        message: "Image is required",
+                    });
+                }
+                const fileBase64 = req.file.buffer.toString("base64");
+                const file = `data:${req.file.mimetype};base64,${fileBase64}`;
                 if (!merk || !type || !year) {
                     return res.status(400).json({
                         status: false,
@@ -62,12 +135,14 @@ class CarsControllers {
                         message: "Access forbidden",
                     });
                 }
+                const uploadResult = yield cloudinary_1.default.uploader.upload(file);
                 const payload = {
                     id: (0, uuid_1.v4)(),
                     merk,
                     type,
                     year,
                     status,
+                    image: uploadResult.secure_url,
                     created_by: user.username,
                 };
                 const car = yield CarService_1.carService.createCar(payload);
@@ -110,6 +185,12 @@ class CarsControllers {
                     updated_by: user.username,
                     updated_at: new Date(),
                 };
+                if (req.file) {
+                    const fileBase64 = req.file.buffer.toString("base64");
+                    const file = `data:${req.file.mimetype};base64,${fileBase64}`;
+                    const uploadResult = yield cloudinary_1.default.uploader.upload(file);
+                    payload.image = uploadResult.secure_url;
+                }
                 const car = yield CarService_1.carService.updateCar(id, payload);
                 res.status(200).json({
                     status: true,
@@ -120,6 +201,7 @@ class CarsControllers {
                         type: car.type,
                         year: car.year,
                         status: car.status,
+                        image: car.image,
                         updated_by: car.updated_by,
                     },
                 });

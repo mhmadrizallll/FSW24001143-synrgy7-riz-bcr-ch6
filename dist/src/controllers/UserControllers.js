@@ -28,6 +28,8 @@ const UserService_1 = require("../services/UserService");
 const bcrypt_1 = require("../utils/bcrypt");
 const uuid_1 = require("uuid");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const google_auth_library_1 = require("google-auth-library");
+const client = new google_auth_library_1.OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 class UserControllers {
     getUsers(req, res) {
         var _a;
@@ -350,6 +352,30 @@ class UserControllers {
             }
             catch (err) {
                 console.log(err);
+                res.status(500).json({ status: false, message: err });
+            }
+        });
+    }
+    loginWithGoogle(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { token } = req.body;
+                const ticket = yield client.verifyIdToken({
+                    idToken: token,
+                    audience: process.env.GOOGLE_CLIENT_ID,
+                });
+                const response = ticket.getPayload();
+                const payload = {
+                    id: response.sub,
+                    email: response.email,
+                    name: response.name,
+                    picture: response.picture,
+                    role: "member",
+                };
+                const tokenJwt = jsonwebtoken_1.default.sign(payload, process.env.MEMBER_SECRET, {});
+                res.status(200).json({ status: true, token: tokenJwt, data: payload });
+            }
+            catch (err) {
                 res.status(500).json({ status: false, message: err });
             }
         });

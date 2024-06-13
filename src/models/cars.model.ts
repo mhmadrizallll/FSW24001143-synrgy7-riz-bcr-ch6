@@ -6,6 +6,7 @@ export class CarsModel extends Model {
   type!: string;
   year!: number;
   status!: "available" | "rented";
+  image!: string;
   created_by!: string;
   updated_by!: string;
   deleted_by?: string;

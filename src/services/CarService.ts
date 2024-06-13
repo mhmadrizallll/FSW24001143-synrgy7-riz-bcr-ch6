@@ -8,6 +8,9 @@ class CarService {
   async getCarIsDeletedFalse() {
     return await carRepository.getCarIsDeletedFalse();
   }
+  async getCarById(id: string) {
+    return await carRepository.getCarById(id);
+  }
   async createCar(car: Partial<CarsModel>): Promise<void> {
     await carRepository.createCar(car);
     return;

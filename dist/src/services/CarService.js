@@ -22,6 +22,11 @@ class CarService {
             return yield CarRepository_1.carRepository.getCarIsDeletedFalse();
         });
     }
+    getCarById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield CarRepository_1.carRepository.getCarById(id);
+        });
+    }
     createCar(car) {
         return __awaiter(this, void 0, void 0, function* () {
             yield CarRepository_1.carRepository.createCar(car);

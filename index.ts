@@ -5,6 +5,7 @@ import { Model } from "objection";
 import router from "./src/routes";
 import swaggerUi from "swagger-ui-express";
 import * as swaggerDocument from "./swaggerConfig.json";
+import cors from "cors";
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ Model.knex(knekInstance);
 const app: Express = express();
 const port = 8000;
 
+app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 

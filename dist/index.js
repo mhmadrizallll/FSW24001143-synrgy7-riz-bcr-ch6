@@ -33,6 +33,7 @@ const objection_1 = require("objection");
 const routes_1 = __importDefault(require("./src/routes"));
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const swaggerDocument = __importStar(require("./swaggerConfig.json"));
+const cors_1 = __importDefault(require("cors"));
 dotenv_1.default.config();
 const knekInstance = (0, knex_1.default)({
     client: "pg",
@@ -47,6 +48,7 @@ const knekInstance = (0, knex_1.default)({
 objection_1.Model.knex(knekInstance);
 const app = (0, express_1.default)();
 const port = 8000;
+app.use((0, cors_1.default)());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use(express_1.default.json());
 app.use("/api-docs", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerDocument));

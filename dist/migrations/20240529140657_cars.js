@@ -21,6 +21,7 @@ function up(knex) {
                 .enum("status", ["available", "rented"])
                 .defaultTo("available")
                 .notNullable();
+            table.string("image", 255).nullable();
             table.string("created_by", 255).nullable();
             table.string("updated_by", 255).nullable();
             table.string("deleted_by", 255).nullable();

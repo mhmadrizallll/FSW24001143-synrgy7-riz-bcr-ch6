@@ -7,7 +7,11 @@ class CarRepository {
   async getCarIsDeletedFalse(): Promise<CarsModel[]> {
     return await CarsModel.query()
       .where({ is_deleted: false })
-      .select("id", "merk", "type", "year", "status");
+      .select("id", "merk", "type", "year", "status", "image");
+  }
+
+  async getCarById(id: string): Promise<CarsModel | undefined> {
+    return await CarsModel.query().findById(id);
   }
   async createCar(car: Partial<CarsModel>): Promise<CarsModel> {
     return await CarsModel.query().insert(car);

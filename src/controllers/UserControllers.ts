@@ -3,6 +3,9 @@ import { userService } from "../services/UserService";
 import { encryptPassword, checkPassword } from "../utils/bcrypt";
 import { v4 } from "uuid";
 import jwt from "jsonwebtoken";
+import { OAuth2Client } from "google-auth-library";
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 class UserControllers {
   async getUsers(req: Request, res: Response) {
@@ -341,6 +344,29 @@ class UserControllers {
       res.status(200).json({ status: true, message: "User Available", user });
     } catch (err) {
       console.log(err);
+      res.status(500).json({ status: false, message: err });
+    }
+  }
+
+  async loginWithGoogle(req: Request, res: Response): Promise<void> {
+    try {
+      const { token } = req.body;
+
+      const ticket = await client.verifyIdToken({
+        idToken: token,
+        audience: process.env.GOOGLE_CLIENT_ID,
+      });
+      const response: any = ticket.getPayload();
+      const payload = {
+        id: response.sub,
+        email: response.email,
+        name: response.name,
+        picture: response.picture,
+        role: "member",
+      };
+      const tokenJwt = jwt.sign(payload, process.env.MEMBER_SECRET, {});
+      res.status(200).json({ status: true, token: tokenJwt, data: payload });
+    } catch (err) {
       res.status(500).json({ status: false, message: err });
     }
   }

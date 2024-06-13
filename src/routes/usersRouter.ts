@@ -4,8 +4,9 @@ import authMiddleware from "../middleware/authMiddleware";
 const router = express.Router();
 
 // access member without token
-router.post("/login", userControllers.login);
 router.post("/register", userControllers.register);
+router.post("/login", userControllers.login);
+router.post("/auth/google", userControllers.loginWithGoogle);
 
 // access superadmin and admin with token
 router.post("/superadmin/register", authMiddleware, userControllers.register);

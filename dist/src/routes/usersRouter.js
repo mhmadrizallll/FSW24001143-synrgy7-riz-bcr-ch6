@@ -8,8 +8,9 @@ const UserControllers_1 = require("../controllers/UserControllers");
 const authMiddleware_1 = __importDefault(require("../middleware/authMiddleware"));
 const router = express_1.default.Router();
 // access member without token
-router.post("/login", UserControllers_1.userControllers.login);
 router.post("/register", UserControllers_1.userControllers.register);
+router.post("/login", UserControllers_1.userControllers.login);
+router.post("/auth/google", UserControllers_1.userControllers.loginWithGoogle);
 // access superadmin and admin with token
 router.post("/superadmin/register", authMiddleware_1.default, UserControllers_1.userControllers.register);
 router.get("/", authMiddleware_1.default, UserControllers_1.userControllers.getUsers);

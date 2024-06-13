@@ -1,8 +1,21 @@
 import { Request, Response } from "express";
 import { carService } from "../services/CarService";
 import { v4 } from "uuid";
+import cloudinary from "../middleware/cloudinary";
 
 class CarsControllers {
+  async getCarsALluser(req: Request, res: Response) {
+    try {
+      const cars = await carService.getAllCars();
+      res.status(200).json({
+        status: true,
+        message: "Cars Available",
+        data: cars,
+      });
+    } catch (err) {
+      res.status(500).json({ status: false, message: err });
+    }
+  }
   async getCars(req: Request, res: Response) {
     const role = req.user?.role;
     console.log("ini adalah user", role);
@@ -28,12 +41,64 @@ class CarsControllers {
     }
   }
 
+  async getCarById(req: Request, res: Response) {
+    const { id } = req.params;
+    try {
+      const car = await carService.getCarById(id);
+      if (car) {
+        res.status(200).json({
+          status: true,
+          message: "Car Available",
+          data: car,
+        });
+      } else {
+        res.status(404).json({
+          status: false,
+          message: "Car not found",
+        });
+      }
+    } catch (err) {
+      res.status(500).json({ status: false, message: err });
+    }
+  }
+
+  async cloudUploadImage(req: Request, res: Response) {
+    const fileBase64 = req.file?.buffer.toString("base64");
+    const file = `data:${req.file?.mimetype};base64,${fileBase64}`;
+
+    cloudinary.uploader
+      .upload(file)
+      .then((result) => {
+        res.status(200).json({
+          status: true,
+          message: "File uploaded",
+          data: result,
+        });
+      })
+      .catch((err) => {
+        res.status(500).json({
+          status: false,
+          message: err,
+        });
+      });
+  }
+
   async create(req: Request, res: Response) {
     const { merk, type, year, status } = req.body;
     const user: any = req.user;
     const role = req.user?.role;
     console.log("ini adalah user", user);
     try {
+      if (!req.file) {
+        return res.status(400).json({
+          status: false,
+          message: "Image is required",
+        });
+      }
+
+      const fileBase64 = req.file.buffer.toString("base64");
+      const file = `data:${req.file.mimetype};base64,${fileBase64}`;
+
       if (!merk || !type || !year) {
         return res.status(400).json({
           status: false,
@@ -47,13 +112,14 @@ class CarsControllers {
           message: "Access forbidden",
         });
       }
-
+      const uploadResult = await cloudinary.uploader.upload(file);
       const payload = {
         id: v4(),
         merk,
         type,
         year,
         status,
+        image: uploadResult.secure_url,
         created_by: user.username,
       };
       const car = await carService.createCar(payload);
@@ -87,7 +153,7 @@ class CarsControllers {
         });
       }
 
-      const payload = {
+      const payload: any = {
         merk,
         type,
         year,
@@ -95,6 +161,13 @@ class CarsControllers {
         updated_by: user.username,
         updated_at: new Date(),
       };
+
+      if (req.file) {
+        const fileBase64 = req.file.buffer.toString("base64");
+        const file = `data:${req.file.mimetype};base64,${fileBase64}`;
+        const uploadResult = await cloudinary.uploader.upload(file);
+        payload.image = uploadResult.secure_url;
+      }
 
       const car = await carService.updateCar(id, payload);
       res.status(200).json({
@@ -106,6 +179,7 @@ class CarsControllers {
           type: car.type,
           year: car.year,
           status: car.status,
+          image: car.image,
           updated_by: car.updated_by,
         },
       });
