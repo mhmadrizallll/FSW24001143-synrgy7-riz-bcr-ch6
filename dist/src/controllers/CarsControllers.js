@@ -17,7 +17,7 @@ const CarService_1 = require("../services/CarService");
 const uuid_1 = require("uuid");
 const cloudinary_1 = __importDefault(require("../middleware/cloudinary"));
 class CarsControllers {
-    getCarsALluser(req, res) {
+    getCarsAllUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const cars = yield CarService_1.carService.getAllCars();
@@ -110,7 +110,7 @@ class CarsControllers {
     create(req, res) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            const { merk, type, year, status } = req.body;
+            const { plate, manufacture, model, rentPerDay, capacity, description, availableAt, transmission, type, year, } = req.body;
             const user = req.user;
             const role = (_a = req.user) === null || _a === void 0 ? void 0 : _a.role;
             console.log("ini adalah user", user);
@@ -123,7 +123,16 @@ class CarsControllers {
                 }
                 const fileBase64 = req.file.buffer.toString("base64");
                 const file = `data:${req.file.mimetype};base64,${fileBase64}`;
-                if (!merk || !type || !year) {
+                if (!plate ||
+                    !manufacture ||
+                    !model ||
+                    !rentPerDay ||
+                    !capacity ||
+                    !description ||
+                    !availableAt ||
+                    !transmission ||
+                    !type ||
+                    !year) {
                     return res.status(400).json({
                         status: false,
                         message: "All fields are required",
@@ -138,11 +147,17 @@ class CarsControllers {
                 const uploadResult = yield cloudinary_1.default.uploader.upload(file);
                 const payload = {
                     id: (0, uuid_1.v4)(),
-                    merk,
+                    plate,
+                    manufacture,
+                    model,
+                    image: uploadResult.secure_url,
+                    rentPerDay,
+                    capacity,
+                    description,
+                    availableAt,
+                    transmission,
                     type,
                     year,
-                    status,
-                    image: uploadResult.secure_url,
                     created_by: user.username,
                 };
                 const car = yield CarService_1.carService.createCar(payload);
@@ -154,18 +169,29 @@ class CarsControllers {
             }
             catch (err) {
                 res.status(500).json({ status: false, message: err });
+                console.log(err);
             }
         });
     }
     update(req, res) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            const { merk, type, year, status } = req.body;
+            const { plate, manufacture, model, rentPerDay, capacity, available, availableAt, description, transmission, type, year, } = req.body;
             const { id } = req.params;
             const user = req.user;
             const role = (_a = req.user) === null || _a === void 0 ? void 0 : _a.role;
             try {
-                if (!merk || !type || !year) {
+                if (!plate ||
+                    !manufacture ||
+                    !model ||
+                    !rentPerDay ||
+                    !capacity ||
+                    !description ||
+                    !available ||
+                    !transmission ||
+                    !availableAt ||
+                    !type ||
+                    !year) {
                     return res.status(400).json({
                         status: false,
                         message: "All fields are required",
@@ -178,10 +204,18 @@ class CarsControllers {
                     });
                 }
                 const payload = {
-                    merk,
+                    id: (0, uuid_1.v4)(),
+                    plate,
+                    manufacture,
+                    model,
+                    rentPerDay,
+                    capacity,
+                    description,
+                    available,
+                    availableAt,
+                    transmission,
                     type,
                     year,
-                    status,
                     updated_by: user.username,
                     updated_at: new Date(),
                 };
@@ -195,15 +229,7 @@ class CarsControllers {
                 res.status(200).json({
                     status: true,
                     message: "Car updated",
-                    data: {
-                        id: car.id,
-                        merk: car.merk,
-                        type: car.type,
-                        year: car.year,
-                        status: car.status,
-                        image: car.image,
-                        updated_by: car.updated_by,
-                    },
+                    data: payload,
                 });
             }
             catch (err) {
@@ -229,14 +255,7 @@ class CarsControllers {
                     res.status(200).json({
                         status: true,
                         message: "Car deleted",
-                        data: {
-                            id: car.id,
-                            merk: car.merk,
-                            type: car.type,
-                            year: car.year,
-                            status: car.status,
-                            is_deleted: car.is_deleted,
-                        },
+                        data: car,
                     });
                 }
                 else {
@@ -269,14 +288,7 @@ class CarsControllers {
                     res.status(200).json({
                         status: true,
                         message: "Car restored",
-                        data: {
-                            id: car.id,
-                            merk: car.merk,
-                            type: car.type,
-                            year: car.year,
-                            status: car.status,
-                            restored_by: car.restored_by,
-                        },
+                        data: car,
                     });
                 }
                 else {

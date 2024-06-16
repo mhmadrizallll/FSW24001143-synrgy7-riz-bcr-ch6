@@ -9,7 +9,7 @@ const config = {
             password: "1",
             port: 5432,
             host: "127.0.0.1",
-            database: "db_ch6",
+            database: "db_ch7",
         },
     },
 };

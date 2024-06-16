@@ -4,7 +4,7 @@ import { v4 } from "uuid";
 import cloudinary from "../middleware/cloudinary";
 
 class CarsControllers {
-  async getCarsALluser(req: Request, res: Response) {
+  async getCarsAllUser(req: Request, res: Response) {
     try {
       const cars = await carService.getAllCars();
       res.status(200).json({
@@ -84,7 +84,18 @@ class CarsControllers {
   }
 
   async create(req: Request, res: Response) {
-    const { merk, type, year, status } = req.body;
+    const {
+      plate,
+      manufacture,
+      model,
+      rentPerDay,
+      capacity,
+      description,
+      availableAt,
+      transmission,
+      type,
+      year,
+    } = req.body;
     const user: any = req.user;
     const role = req.user?.role;
     console.log("ini adalah user", user);
@@ -99,7 +110,18 @@ class CarsControllers {
       const fileBase64 = req.file.buffer.toString("base64");
       const file = `data:${req.file.mimetype};base64,${fileBase64}`;
 
-      if (!merk || !type || !year) {
+      if (
+        !plate ||
+        !manufacture ||
+        !model ||
+        !rentPerDay ||
+        !capacity ||
+        !description ||
+        !availableAt ||
+        !transmission ||
+        !type ||
+        !year
+      ) {
         return res.status(400).json({
           status: false,
           message: "All fields are required",
@@ -115,11 +137,17 @@ class CarsControllers {
       const uploadResult = await cloudinary.uploader.upload(file);
       const payload = {
         id: v4(),
-        merk,
+        plate,
+        manufacture,
+        model,
+        image: uploadResult.secure_url,
+        rentPerDay,
+        capacity,
+        description,
+        availableAt,
+        transmission,
         type,
         year,
-        status,
-        image: uploadResult.secure_url,
         created_by: user.username,
       };
       const car = await carService.createCar(payload);
@@ -130,16 +158,41 @@ class CarsControllers {
       });
     } catch (err) {
       res.status(500).json({ status: false, message: err });
+      console.log(err);
     }
   }
 
   async update(req: Request, res: Response) {
-    const { merk, type, year, status } = req.body;
+    const {
+      plate,
+      manufacture,
+      model,
+      rentPerDay,
+      capacity,
+      available,
+      availableAt,
+      description,
+      transmission,
+      type,
+      year,
+    } = req.body;
     const { id } = req.params;
     const user: any = req.user;
     const role = req.user?.role;
     try {
-      if (!merk || !type || !year) {
+      if (
+        !plate ||
+        !manufacture ||
+        !model ||
+        !rentPerDay ||
+        !capacity ||
+        !description ||
+        !available ||
+        !transmission ||
+        !availableAt ||
+        !type ||
+        !year
+      ) {
         return res.status(400).json({
           status: false,
           message: "All fields are required",
@@ -154,10 +207,18 @@ class CarsControllers {
       }
 
       const payload: any = {
-        merk,
+        id: v4(),
+        plate,
+        manufacture,
+        model,
+        rentPerDay,
+        capacity,
+        description,
+        available,
+        availableAt,
+        transmission,
         type,
         year,
-        status,
         updated_by: user.username,
         updated_at: new Date(),
       };
@@ -173,15 +234,7 @@ class CarsControllers {
       res.status(200).json({
         status: true,
         message: "Car updated",
-        data: {
-          id: car.id,
-          merk: car.merk,
-          type: car.type,
-          year: car.year,
-          status: car.status,
-          image: car.image,
-          updated_by: car.updated_by,
-        },
+        data: payload,
       });
     } catch (err) {
       res.status(500).json({ status: false, message: err });
@@ -205,14 +258,7 @@ class CarsControllers {
         res.status(200).json({
           status: true,
           message: "Car deleted",
-          data: {
-            id: car.id,
-            merk: car.merk,
-            type: car.type,
-            year: car.year,
-            status: car.status,
-            is_deleted: car.is_deleted,
-          },
+          data: car,
         });
       } else {
         res.status(404).json({
@@ -241,14 +287,7 @@ class CarsControllers {
         res.status(200).json({
           status: true,
           message: "Car restored",
-          data: {
-            id: car.id,
-            merk: car.merk,
-            type: car.type,
-            year: car.year,
-            status: car.status,
-            restored_by: car.restored_by,
-          },
+          data: car,
         });
       } else {
         res.status(404).json({

@@ -21,7 +21,7 @@ class CarRepository {
         return __awaiter(this, void 0, void 0, function* () {
             return yield cars_model_1.CarsModel.query()
                 .where({ is_deleted: false })
-                .select("id", "merk", "type", "year", "status", "image");
+                .select("id", "plate", "manufacture", "model", "image", "rentPerDay", "capacity", "description", "availableAt", "transmission", "available", "type", "year");
         });
     }
     getCarById(id) {

@@ -42,7 +42,7 @@ const knekInstance = (0, knex_1.default)({
         password: "1",
         port: 5432,
         host: "127.0.0.1",
-        database: "db_ch6",
+        database: "db_ch7",
     },
 });
 objection_1.Model.knex(knekInstance);

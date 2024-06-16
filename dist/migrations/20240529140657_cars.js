@@ -14,20 +14,24 @@ function up(knex) {
     return __awaiter(this, void 0, void 0, function* () {
         return knex.schema.createTable("cars", (table) => {
             table.string("id", 255).primary();
-            table.string("merk", 255).notNullable();
+            table.string("plate", 255).notNullable();
+            table.string("manufacture", 255).notNullable();
+            table.string("model", 255).notNullable();
+            table.string("image", 255).nullable();
+            table.integer("rentPerDay").notNullable();
+            table.integer("capacity").notNullable();
+            table.text("description").nullable();
+            table.string("availableAt", 255).notNullable();
+            table.enum("transmission", ["manual", "automatic"]).notNullable();
+            table.boolean("available").defaultTo(true).notNullable();
             table.string("type", 255).notNullable();
             table.integer("year").notNullable();
-            table
-                .enum("status", ["available", "rented"])
-                .defaultTo("available")
-                .notNullable();
-            table.string("image", 255).nullable();
             table.string("created_by", 255).nullable();
             table.string("updated_by", 255).nullable();
             table.string("deleted_by", 255).nullable();
+            table.boolean("is_deleted").defaultTo(false).notNullable();
             table.string("restored_by", 255).nullable();
             table.timestamps(true, true);
-            table.boolean("is_deleted").defaultTo(false).notNullable();
         });
     });
 }
